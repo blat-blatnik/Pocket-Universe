@@ -28,23 +28,23 @@ If for you couldn't or didn't compile for any reason, pre-compiled executables a
 
 ### Controls
 
-key   | function
-----------------
-`ESC` | close the simulation
-`H`   | print this help message
-`W`   | toggle universe wrap-around
-`V`   | toggle vsync
-`TAB` | print simulation parameters
-`B`   | balanced
-`C`   | chaos
-`D`   | diversity
-`F`   | frictionless
-`G`   | gliders
-`O`   | homogeneity
-`L`   | large clusters
-`M`   | medium clusters
-`S`   | small clusters
-`Q`   | quiescence
+| key   | function                     |
+| :---: | ---------------------------- |
+| `ESC` | close the simulation         |
+| `H`   | print this help message      |
+| `W`   | toggle universe wrap-around  |
+| `V`   | toggle vsync                 |
+| `TAB` | print simulation parameters  |
+| `B`   | balanced                     |
+| `C`   | chaos                        |
+| `D`   | diversity                    |
+| `F`   | frictionless                 |
+| `G`   | gliders                      |
+| `O`   | homogeneity                  |
+| `L`   | large clusters               |
+| `M`   | medium clusters              |
+| `S`   | small clusters               |
+| `Q`   | quiescence                   |
 
 ![](/screenshots/1.png)
 
