@@ -26,11 +26,12 @@ layout(std140, binding=10) uniform UNIFORMS {
 };
 
 void main() {
+	// Add some transparency based on distance from center.
 	float alpha = 1.0 - dot(inPos, inPos);
 	vertColor = vec4(particleTypes[inType].color, alpha);
 
+	// Output normalized device coordinates.
 	vec2 pos = inPos * particleRadius + inOffset;
 	pos = (pos / center) - 1.0;
-
 	gl_Position = vec4(pos, 0.0, 1.0);
 }

@@ -52,6 +52,7 @@ Universe createUniverse(int numParticleTypes, int numParticles, float width, flo
 	const float limit = twoPi + 0.001f;
 	int num_coords = u.meshDetail + 2;
 	vec2 *coords = (vec2 *)malloc(num_coords * sizeof(vec2));
+	// Generate a circular mesh with the given detail.
 	coords[0].x = 0;
 	coords[0].y = 0;
 	int i = 1;
@@ -65,7 +66,7 @@ Universe createUniverse(int numParticleTypes, int numParticles, float width, flo
 	glBufferData(GL_ARRAY_BUFFER, num_coords * sizeof(vec2), coords, GL_STATIC_DRAW);
 	free(coords);
 
-	// Initialize VAO.
+	// Initialize VAOs.
 	glGenVertexArrays(1, &ui->particleVertexArray1);
 	glGenVertexArrays(1, &ui->particleVertexArray2);
 	glBindVertexArray(ui->particleVertexArray1);
@@ -126,6 +127,8 @@ void updateBuffers(Universe *u) {
 
 	struct UniverseInternal *ui = &u->internal;
 
+	// Recalculate the tile sizes.
+
 	float tileSize = 0;
 	for (int i = 0; i < u->numParticleTypes; ++i)
 		for (int j = 0; j < u->numParticleTypes; ++j)
@@ -142,6 +145,10 @@ void updateBuffers(Universe *u) {
 		int size;
 	} *tileLists = (struct TileList *)calloc(numTiles, sizeof(*tileLists));
 	
+	// On the initial run of the shaders the capacity of the tile lists needs to be calculated.
+	// This is why we have to do it here. After the first timestep we no longer have to do this
+	// here and the shaders will take care of it.
+
 	for (int pID = 0; pID < u->numParticles; ++pID) {
 		Particle p = u->particles[pID];
 		int gridID = (int)(p.pos.y * ui->invTileSize) * ui->numTilesX + (int)(p.pos.x * ui->invTileSize);
@@ -198,6 +205,22 @@ void simulateTimestep(Universe *u) {
 	uniforms.wrap = u->wrap;
 	glBindBuffer(GL_UNIFORM_BUFFER, ui->gpuUniforms);
 	glBufferData(GL_UNIFORM_BUFFER, sizeof(uniforms), &uniforms, GL_STREAM_DRAW);
+
+	// The particle data is actually double buffered on the GPU between timesteps.
+	// During the shader pipeline the particles from the back buffer are copied over
+	// to the front buffer sorted in order of which tile they belong to. This improves
+	// the memory caching behavior when we calculate particle interactions. The code
+	// below switches the front/new buffer from the previous timestep to be the back/old
+	// buffer in this timestep. A similar thing has to happen with the VAO so that we
+	// always render the particles in the front buffer.
+	// As a side note, because we re-order the particles every timestep the particles
+	// will appear to flicker when we render them. This is because they will be essentially
+	// drawn in random order each frame and so one frame, particle 1 might completely cover
+	// up particle 2, but the next frame particle 2 might cover up particle 1, which
+	// causes them to flicker. This could be fixed by not using a double-buffer like we
+	// do here and simply storing a list of indices for each tile, but that would
+	// introduce a memory indirection and lower performance by a pretty significant factor
+	// (I tried it).
 
 	GpuBuffer temp = ui->gpuNewParticles;
 	ui->gpuNewParticles = ui->gpuOldParticles;

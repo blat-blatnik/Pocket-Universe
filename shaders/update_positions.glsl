@@ -1,9 +1,8 @@
 #version 430
 
-// This compute shader sorts all of the particles into tiles
-// based on the position of the particle. The particles are moved
-// from the "old" particle buffer (back-buffer) to the "new" 
-// particle buffer (front-buffer).
+// This compute shader updates the positions of each particle
+// and also sorts the particles into the tiles for the next frame
+// by updating the tile capacities.
 
 layout (local_size_x=256) in;
 
@@ -38,15 +37,14 @@ layout(std140, binding=10) uniform UNIFORMS {
 	bool wrap;
 };
 
-void updateParticle(inout Particle p) {	
-	float ff = pow(1.0 - friction, deltaTime);
+void updateParticle(inout Particle p) {
 	p.pos += p.vel * deltaTime;
-	p.vel *= ff;
+	p.vel *= pow(1.0 - friction, deltaTime);
+
 	if (wrap) {
 		p.pos -= size * ivec2(greaterThanEqual(p.pos, size));
 		p.pos += size * ivec2(lessThan(p.pos, vec2(0)));
-	} 
-	else {
+	} else {
 		float particleDiamater = 2.0 * particleRadius;
 		vec2 minPos = vec2(particleDiamater);
 		vec2 maxPos = size - vec2(particleDiamater);

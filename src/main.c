@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-// Uncomment bellow to compile a benchmark executable
+// Uncomment below to compile a benchmark executable
 //#define BENCHMARK
 
 // Request a dedicated GPU if avaliable.
@@ -288,7 +288,6 @@ int main(void) {
 	printf("benchmark finished! took %lg seconds to finish %d timesteps (average time per timestep is %lg seconds).", 
 		benchmarkTime, benchmarkTimesteps, benchmarkTime / benchmarkTimesteps);
 #else
-
 	// Enter the simulation loop.
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
@@ -307,10 +306,7 @@ int main(void) {
 		frameAcc += 1;
 		if (timeAcc >= 0.1) {
 			char newTitle[512];
-			if (totalTime >= 1000000000) {
-				sprintf(newTitle, "Pocket Universe [t=%.1lfG (+%g) | %.1lf tsps]",
-					totalTime / 1000000000.0, universe.deltaTime, frameAcc / timeAcc);
-			} else if (totalTime >= 1000000) {
+			if (totalTime >= 1000000) {
 				sprintf(newTitle, "Pocket Universe [t=%.1lfM (+%g) | %.1lf tsps]",
 					totalTime / 1000000.0, universe.deltaTime, frameAcc / timeAcc);
 			} else if (totalTime >= 2000) {
