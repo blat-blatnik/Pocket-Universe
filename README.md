@@ -177,6 +177,8 @@ For this benchmark, only the machine with the GTX 1050 graphics card was used, a
 |              1531 |             -200 |        2.294 |        12.62 |         38.87 |         137.1 |
 |              1417 |             -300 |        2.496 |        12.44 |         40.52 |         146.6 |
 
+As is to be expected, the performance seems to scale close to linearly with clock-speed. This can be seen in the 200'000 particle case where the clock speed was lowered by 17% and the performance decreased by 22%.
+
 ### Data: video-memory clock-speed
 
 For this benchmark, only the machine with the GTX 1050 graphics card was used, and the video memory clock-speed was changed. The core clock speed was 1721MHz.
@@ -187,6 +189,8 @@ For this benchmark, only the machine with the GTX 1050 graphics card was used, a
 |              3354 |             -150 |        3.252 |        12.54 |         39.21 |         156.8 |
 |              3204 |             -300 |        3.218 |        12.76 |         39.23 |         157.4 |
 |              3054 |             -450 |        3.236 |        13.16 |         38.58 |         157.4 | 
+
+Interestingly enough even a small drop in memory clock drastically lowered the performance in all cases except with 10'000 particles. Even more curiously lowering the memory clock further did not significantly affect performance. I'm not exactly sure why this is the case. It could indicate a problem with the benchmark - or with the algorithm - but this is something I have to look into further. 
 
 ## Requirements
 
