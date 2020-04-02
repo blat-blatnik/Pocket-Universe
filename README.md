@@ -1,6 +1,6 @@
 # Pocket-Universe
 
-A particle simulation running in parallel on the GPU using compute shaders. In this particle system the particles can attract and repel each other in a small radius and it looks astounding and very life-like when running in real time. I optimized it as much as I could. The current system can simulate around 100,000-200,000 particles in real-time (30fps) on a modern GPU. 
+A particle simulation running in parallel on the GPU using compute shaders. In this particle system the particles can attract and repel each other in a small radius and it looks astounding and very life-like when running in real time. I optimized it as much as I could. The current system can simulate around 100'000-200'000 particles in real-time (30fps) on a modern GPU. 
 
 ![](/screenshots/1.png)
 
@@ -27,7 +27,7 @@ for particle p in particles:
   p.position += p.velocity
 ```
 
-This naive implementation runs very poorly. On a CPU this can barely simulate 1,000 particles in real-time (single-threaded), and on a GPU it cannot simulate more than around 10,000 particles.  However, we can do much better.
+This naive implementation runs very poorly. On a CPU this can barely simulate 1'000 particles in real-time (single-threaded), and on a GPU it cannot simulate more than around 10'000 particles.  However, we can do much better.
 
 ### Tiling
 
@@ -51,7 +51,7 @@ for particle p in particles:
   p.position += p.velocity
 ```
 
-This reduces the algorithmic complexity of the simulation from O(n<sup>2</sup>) to O(nt), where _t_ denotes the largest number of particles that belongs to any tile. Since _t_ will usually be way smaller than _n_, this is a big performance win. An implementation on the CPU can now simulate 8,000 particles (single-threaded), and a GPU implementation can simulate around 40,000 particles.
+This reduces the algorithmic complexity of the simulation from O(n<sup>2</sup>) to O(nt), where _t_ denotes the largest number of particles that belongs to any tile. Since _t_ will usually be way smaller than _n_, this is a big performance win. An implementation on the CPU can now simulate 8'000 particles (single-threaded), and a GPU implementation can simulate around 40'000 particles.
 
 ![](/screenshots/2.png)
 
@@ -92,7 +92,7 @@ for p in particles:
   p.position += p.velocity
 ```
 
-The GPU implementation following the above algorithm can simulate roughly 80,000 particles in real-time. We improved a caching by implementing the additional steps above, however we have also reached a point where scheduling the compute shaders becomes a large bottleneck.
+The GPU implementation following the above algorithm can simulate roughly 80'000 particles in real-time. We improved a caching by implementing the additional steps above, however we have also reached a point where scheduling the compute shaders becomes a large bottleneck.
 
 ### Unification
 
@@ -122,7 +122,7 @@ for p in particles:
   tile.capacity += 1
 ```
 
-These 4 steps are equivalent to the above 6, however they require the tile capacities to already be computed before running the first timestep, so this work has to be done on the CPU. Each of the 4 steps is performed by 1 of the 4 compute shaders. This is the final step in the optimization. Using this algorithm we can finally simulate 100,000 particles in real-time.
+These 4 steps are equivalent to the above 6, however they require the tile capacities to already be computed before running the first timestep, so this work has to be done on the CPU. Each of the 4 steps is performed by 1 of the 4 compute shaders. This is the final step in the optimization. Using this algorithm we can finally simulate 100'000 particles in real-time.
 
 ![](/screenshots/8.png)
 
@@ -131,6 +131,10 @@ These 4 steps are equivalent to the above 6, however they require the tile capac
 The above sections only mention large optimizations that gave a significant performance improvement however many smaller but interesting optimizations are not covered. For example, instead of having each thread of a compute shader workgroup fetch the same value from memory, this value is only fetched by 1 thread, and cached for use by the others. This greatly reduces memory contention and resulted in a 20% performance boost when applied over all of the shaders.
 
 Some implementation details are also left out of the above, such as how the `tiledparticles` list doesn't just hold a reference to particles from the `particles` array, but rather the particle array is [double-buffered](https://en.wikipedia.org/wiki/Multiple_buffering). You can find more details in the source code.
+
+## Benchmarks
+
+A benchmark of the final simulation code was run on 4 different computers and 7 different graphics cards. In the benchmark I measured the time taken to simulate and draw 1,000 timesteps of a simulation with 10'000, 50'000, 100'000, and 200'000 particles. The RNG seed `42` was used to generate every universe from the benchmark for consistency. Vsync was turned off, and window event processing was ignored during the benchmark runs.
 
 ## Requirements
 
