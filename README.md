@@ -218,6 +218,8 @@ $ clang -std=c99 -o2 *.c -lm -lglfw
 
 ## How to run
 
+![](/screenshots/9.png)
+
 Simply run the compiled executable. A command-line prompt will then appear and the application ask you how many particles to simulate. The list of controls will also be printed on the command line. Note that you need to have the [`/shaders`](/shaders) directory **in the same directory as the executable** when running.
 
 **Do not** try to simulate more particles than your GPU can reasonably handle because your driver might hang, crashing your whole computer. Refer to the given benchmarks as a reference point.
