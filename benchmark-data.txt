@@ -1,0 +1,77 @@
+NVIDIA GeForce GTX 1080 Ti (desktop) - driver 418.113 - 3584 cores @ 2075MHz - 5643MHz VRAM
+- 10,000  particles: 0.292707 seconds (3416.4 fps)
+- 50,000  particles: 2.91294  seconds ( 343.3 fps)
+- 100,000 particles: 9.37741  seconds ( 106.6 fps)
+- 200,000 particles: 26.6351  seconds (  37.5 fps)
+
+NVIDIA GeForce 940MX (laptop) - driver 391.25 - 384 cores @ 1176MHz - 2000MHz VRAM
+- 10,000  particles: 3.74697  seconds (266.9 fps)
+- 50,000  particles: 41.0199  seconds ( 24.4 fps)
+- 100,000 particles: 152.365  seconds (  6.6 fps)
+- 200,000 particles: 600.806  seconds (  1.7 fps)
+
+Intel HD Graphics 620 (laptop) - driver 23.20.16.4973 - 24 cores @ 1050MHz - 2400MHz RAM
+- 10,000  particles: 6.34496  seconds (157.6 fps)
+- 50,000  particles: 42.8026  seconds ( 23.4 fps)
+- 100,000 particles: 150.188  seconds (  6.7 fps)
+- 200,000 particles: 580.883  seconds (  1.7 fps)
+
+Intel UHD Graphics 620 (laptop) - driver 23.20.16.4973 - 24 cores @ 1050MHz - 2400MHz RAM
+- 10,000  particles: 2.30139  seconds (434.5 fps)
+- 50,000  particles: 12.4118  seconds ( 80.6 fps)
+- 100,000 particles: 151.818  seconds (  6.6 fps)
+- 200,000 particles: 597.138  seconds (  1.7 fps)
+
+Intel HD Graphics 630 (laptop) - driver 22.20.16.4749 - 24 cores @ 1000MHz - 2400MHz RAM
+- 10,000  particles: 5.99128  seconds (166.9 fps)
+- 50,000  particles: 47.1029  seconds ( 21.2 fps)
+- 100,000 particles: 165.334  seconds (  6.0 fps)
+- 200,000 particles: 641.684  seconds (  1.6 fps)
+
+NVIDIA GeForce MX110 (laptop) - driver 388.57 - 256 cores @ 1005MHz - 2505MHz VRAM
+- 10,000  particles: 4.72686  seconds (211.6 fps)
+- 50,000  particles: 51.8351  seconds ( 19.3 fps)
+- 100,000 particles: 186.632  seconds (  5.4 fps)
+- 200,000 particles: 713.936  seconds (  1.4 fps)
+
+NVIDIA GeForce GTX 1050 (laptop) - driver 445.75 - 640 cores @ 1733MHz - 3504MHz VRAM
+- 10,000  particles: 2.50053  seconds (399.9 fps)
+- 50,000  particles: 10.7929  seconds ( 92.7 fps)
+- 100,000 particles: 33.5073  seconds ( 29.8 fps)
+- 200,000 particles: 119.944  seconds (  8.3 fps)
+
+NVIDIA GeForce GTX 1050 (laptop) - driver 445.75 - 640 cores @ 1632MHz - 3504MHz VRAM
+- 10,000  particles: 2.29016  seconds (436.7 fps)
+- 50,000  particles: 11.5649  seconds ( 86.5 fps)
+- 100,000 particles: 36.6145  seconds ( 27.3 fps)
+- 200,000 particles: 128.444  seconds (  7.9 fps)
+
+NVIDIA GeForce GTX 1050 (laptop) - driver 445.75 - 640 cores @ 1531MHz - 3504MHz VRAM
+- 10,000  particles: 2.29357  seconds (436.0 fps)
+- 50,000  particles: 12.6164  seconds ( 79.3 fps)
+- 100,000 particles: 38.8671  seconds ( 25.7 fps)
+- 200,000 particles: 137.115  seconds (  7.3 fps)
+
+NVIDIA GeForce GTX 1050 (laptop) - driver 445.75 - 640 cores @ 1417MHz - 3504MHz VRAM
+- 10,000  particles: 2.49647  seconds (400.6 fps)
+- 50,000  particles: 12.4393  seconds ( 80.4 fps)
+- 100,000 particles: 40.5196  seconds ( 24.7 fps)
+- 200,000 particles: 146.561  seconds (  6.8 fps)
+
+NVIDIA GeForce GTX 1050 (laptop) - driver 445.75 - 640 cores @ 1721MHz - 3354MHz VRAM
+- 10,000  particles: 3.25238  seconds (307.5 fps)
+- 50,000  particles: 12.5381  seconds ( 79.8 fps)
+- 100,000 particles: 39.2077  seconds ( 25.5 fps)
+- 200,000 particles: 156.818  seconds (  6.4 fps)
+
+NVIDIA GeForce GTX 1050 (laptop) - driver 445.75 - 640 cores @ 1721MHz - 3204MHz VRAM
+- 10,000  particles: 3.21807  seconds (310.7 fps)
+- 50,000  particles: 12.7590  seconds ( 78.4 fps)
+- 100,000 particles: 39.2334  seconds ( 25.5 fps)
+- 200,000 particles: 157.370  seconds (  6.4 fps)
+
+NVIDIA GeForce GTX 1050 (laptop) - driver 445.75 - 640 cores @ 1721MHz - 3054MHz VRAM
+- 10,000  particles: 3.23603  seconds (309.0 fps)
+- 50,000  particles: 13.1634  seconds ( 76.0 fps)
+- 100,000 particles: 38.5821  seconds ( 25.9 fps)
+- 200,000 particles: 157.394  seconds (  6.4 fps)
