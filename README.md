@@ -53,7 +53,7 @@ for particle p in particles:
 
 This reduces the algorithmic complexity of the simulation from O(n<sup>2</sup>) to O(nt), where _t_ denotes the largest number of particles that belongs to any tile. Since _t_ will usually be way smaller than _n_, this is a big performance win. An implementation on the CPU can now simulate 8,000 particles (single-threaded), and a GPU implementation can simulate around 40,000 particles.
 
-![](/screenshots/tiles.png)
+![](/screenshots/2.png)
 
 After each timestep, we want to render the particles to the screen, and so a major downside of the CPU implementation is that we will eventually have to send over the particle positions to the GPU _every timestep_. Even if this isn't a concern right now, it will eventually become the bottleneck as more and more particle positions have to be sent over. For this reason we should focus optimizations on the GPU implementation only.
 
