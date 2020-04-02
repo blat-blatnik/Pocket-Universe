@@ -134,7 +134,7 @@ Some implementation details are also left out of the above, such as how the `til
 
 ## Benchmarks
 
-A benchmark of the final simulation code was run on 4 different computers and 7 different graphics cards. In the benchmark I measured the time taken to simulate and draw 1,000 timesteps of a simulation with 10'000, 50'000, 100'000, and 200'000 particles. The RNG seed `42` was used to generate every universe from the benchmark for consistency. Vsync was turned off, and window event processing was ignored during the benchmark runs. Laptop machines were plugged in and charged through the simulation, and all other programs were closed.
+3 benchmarks of the final simulation code was run on 4 different computers and 7 different graphics cards. In the benchmarks I measured the time taken to simulate and draw 1,000 timesteps of a simulation with 10'000, 50'000, 100'000, and 200'000 particles. The RNG seed `42` was used to generate every universe from the benchmark for consistency. Vsync was turned off, and window event processing was ignored during the benchmark runs. Laptop machines were plugged in and charged through the simulation, and all other programs were closed.
 
 ### GPU specs
 
@@ -150,7 +150,9 @@ The following GPUs were used in the benchmarks. The clock speeds reported here w
 | Intel HD Graphics 630      | laptop       | 24    | 1000            | 2400               |
 | NVIDIA GeForce MX110       | laptop       | 256   | 1005            | 2505               |
 
-### Data
+### Data: particle count
+
+For this benchmark, all machines ran the benchmarks once at their highest clock speeds which are reported above.
 
 | model               | 10'000 [sec] | 50'000 [sec] | 100'000 [sec] | 200'000 [sec] |
 | ------------------- | -----------: | -----------: | ------------: | ------------: |
@@ -161,6 +163,30 @@ The following GPUs were used in the benchmarks. The clock speeds reported here w
 | UHD Graphics 620    |        2.301 |        12.41 |         151.8 |         597.1 |
 | HD Graphics 630     |        5.991 |        47.10 |         165.3 |         641.7 |
 | GeForce MX110       |        4.727 |        51.84 |         186.6 |         713.9 |
+
+The quadratic nature of the particle interaction algorithm can clearly be seen from the data - doubling the particle count generally tends to double the time taken to complete the benchmark.
+
+### Data: core clock-speed
+
+For this benchmark, only the machine with the GTX 1050 graphics card was used, and the clock-speed of the card was changed. The VRAM memory clock speed was 3504MHz.
+
+| clock-speed [MHz] | underclock [MHz] | 10'000 [sec] | 50'000 [sec] | 100'000 [sec] | 200'000 [sec] |
+| ----------------: | ---------------: | -----------: | -----------: | ------------: | ------------: |
+|              1733 |               -0 |        2.501 |        10.79 |         33.51 |         119.9 |
+|              1632 |             -100 |        2.290 |        11.56 |         36.61 |         128.4 |
+|              1531 |             -200 |        2.294 |        12.62 |         38.87 |         137.1 |
+|              1417 |             -300 |        2.496 |        12.44 |         40.52 |         146.6 |
+
+### Data: video-memory clock-speed
+
+For this benchmark, only the machine with the GTX 1050 graphics card was used, and the video memory clock-speed was changed. The core clock speed was 1721MHz.
+
+| clock-speed [MHz] | underclock [MHz] | 10'000 [sec] | 50'000 [sec] | 100'000 [sec] | 200'000 [sec] |
+| ----------------: | ---------------: | -----------: | -----------: | ------------: | ------------: |
+|              3504 |               -0 |        2.501 |        10.79 |         33.51 |         119.9 |
+|              3354 |             -150 |        3.252 |        12.54 |         39.21 |         156.8 |
+|              3204 |             -300 |        3.218 |        12.76 |         39.23 |         157.4 |
+|              3054 |             -450 |        3.236 |        13.16 |         38.58 |         157.4 | 
 
 ## Requirements
 
