@@ -158,14 +158,14 @@ void updateBuffers(Universe *u) {
 	}
 
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, ui->gpuTileLists);
-	glBufferData(GL_SHADER_STORAGE_BUFFER, numTiles * sizeof(*tileLists), tileLists, GL_STATIC_DRAW);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, numTiles * sizeof(*tileLists), tileLists, GL_STREAM_COPY);
 	free(tileLists);
 
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, ui->gpuNewParticles);
-	glBufferData(GL_SHADER_STORAGE_BUFFER, u->numParticles * sizeof(Particle), u->particles, GL_STATIC_DRAW);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, u->numParticles * sizeof(Particle), u->particles, GL_STREAM_COPY);
 
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, ui->gpuOldParticles);
-	glBufferData(GL_SHADER_STORAGE_BUFFER, u->numParticles * sizeof(Particle), u->particles, GL_STATIC_DRAW);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, u->numParticles * sizeof(Particle), u->particles, GL_STREAM_COPY);
 
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, ui->gpuParticleTypes);
 	glBufferData(GL_SHADER_STORAGE_BUFFER, u->numParticleTypes * sizeof(ParticleType), u->particleTypes, GL_STATIC_DRAW);
