@@ -134,7 +134,33 @@ Some implementation details are also left out of the above, such as how the `til
 
 ## Benchmarks
 
-A benchmark of the final simulation code was run on 4 different computers and 7 different graphics cards. In the benchmark I measured the time taken to simulate and draw 1,000 timesteps of a simulation with 10'000, 50'000, 100'000, and 200'000 particles. The RNG seed `42` was used to generate every universe from the benchmark for consistency. Vsync was turned off, and window event processing was ignored during the benchmark runs.
+A benchmark of the final simulation code was run on 4 different computers and 7 different graphics cards. In the benchmark I measured the time taken to simulate and draw 1,000 timesteps of a simulation with 10'000, 50'000, 100'000, and 200'000 particles. The RNG seed `42` was used to generate every universe from the benchmark for consistency. Vsync was turned off, and window event processing was ignored during the benchmark runs. Laptop machines were plugged in and charged through the simulation, and all other programs were closed.
+
+### GPU specs
+
+The following GPUs were used in the benchmarks. The clock speeds reported here were measured during executation of the benchmark using [GPU-Z](https://www.techpowerup.com/gpuz/).
+
+| model                      | machine-type | cores | GPU-clock [MHz] | memory-clock [MHz] |
+| -------------------------- | :----------: | ----: | --------------: | -----------------: |
+| NVIDIA GeForce GTX 1080 Ti | desktop      | 3584  | 2075            | 5643               |
+| NVIDIA GeForce GTX 1050    | laptop       | 640   | 1721            | 3504               |
+| NVIDIA GeForce 940MX       | laptop       | 384   | 1176            | 2000               |
+| Intel HD Graphics 620      | laptop       | 24    | 1050            | 2400               |
+| Intel UHD Graphics 620     | laptop       | 24    | 1050            | 2400               |
+| Intel HD Graphics 630      | laptop       | 24    | 1000            | 2400               |
+| NVIDIA GeForce MX110       | laptop       | 256   | 1005            | 2505               |
+
+### Data
+
+| model               | 10'000 [sec] | 50'000 [sec] | 100'000 [sec] | 200'000 [sec] |
+| ------------------- | -----------: | -----------: | ------------: | ------------: |
+| GeForce GTX 1080 Ti |        0.293 |        2.913 |         9.377 |         26.63 |
+| GeForce GTX 1050    |        2.500 |        10.79 |         33.51 |         119.9 |
+| GeForce 940MX       |        3.747 |        41.02 |         152.4 |         600.8 |
+| HD Graphics 620     |        6.345 |        42.80 |         150.2 |         580.9 |
+| UHD Graphics 620    |        2.301 |        12.41 |         151.8 |         597.1 |
+| HD Graphics 630     |        5.991 |        47.10 |         165.3 |         641.7 |
+| GeForce MX110       |        4.727 |        51.84 |         186.6 |         713.9 |
 
 ## Requirements
 
