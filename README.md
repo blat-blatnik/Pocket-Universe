@@ -209,11 +209,11 @@ A complete Visual Studio solution is provided in the [/bin](`/bin`) directory. O
 Make sure to [install GLFW](https://www.glfw.org/download.html) through your package manager, or use an appropriate GLFW static library provided in the [/lib](`/lib`) directory. You need to link against GLFW. 
 
 ```bash
-$ gcc -std=c99 -o2 *.c -lm -lglfw
+$ gcc -std=c99 -O2 *.c -lm -lglfw
 ```
 
 ```bash
-$ clang -std=c99 -o2 *.c -lm -lglfw
+$ clang -std=c99 -O2 *.c -lm -lglfw
 ```
 
 ## How to run
