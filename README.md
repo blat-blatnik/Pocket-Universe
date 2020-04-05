@@ -152,7 +152,7 @@ The following GPUs were used in the benchmarks. The clock speeds reported here w
 
 ### Data: particle count
 
-For this benchmark, all machines ran the benchmarks once at their highest clock speeds which are reported above.
+For this benchmark, all machines ran the benchmarks once at their highest clock speeds which are reported above. The numbers in the cells report the amount of time taken to simulate 1'000 timesteps.
 
 | model               | 10'000 [sec] | 50'000 [sec] | 100'000 [sec] | 200'000 [sec] |
 | ------------------- | -----------: | -----------: | ------------: | ------------: |
