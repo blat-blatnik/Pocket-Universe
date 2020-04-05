@@ -231,7 +231,7 @@ If for you couldn't or didn't compile for any reason, pre-compiled executables a
 | key   | function                     |
 | :---: | ---------------------------- |
 | `ESC` | close the simulation         |
-| `H`   | print this help message      |
+| `H`   | print out the controls       |
 | `W`   | toggle universe wrap-around  |
 | `V`   | toggle vsync                 |
 | `TAB` | print simulation parameters  |
