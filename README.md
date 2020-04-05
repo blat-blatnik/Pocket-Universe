@@ -218,11 +218,11 @@ $ clang -std=c99 -O2 *.c -lm -lglfw
 
 ## How to run
 
-![](/screenshots/9.png)
-
 Place the [`/shaders`](/shaders) directory **in the same directory as the executable** and simply run the executable. A command-line prompt will then appear and the application ask you how many particles to simulate. The list of controls will also be printed on the command line. 
 
 **Do not** try to simulate more particles than your GPU can reasonably handle because your driver might hang, crashing your whole computer. Refer to the given benchmarks as a reference point.
+
+![](/screenshots/9.png)
 
 If for you couldn't or didn't compile for any reason, pre-compiled executables are provided in the [`/bin`](/bin) directory. One is for [windows](/bin/Pocket%20Universe.exe), and the other is for [linux](/bin/Pocket%20Universe.out). Make sure you also place the [`/shaders`](/shaders) directory in the same directory as the executable when running.
 
