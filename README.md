@@ -164,7 +164,7 @@ For this benchmark, all machines ran the benchmarks once at their highest clock 
 | HD Graphics 630     |        5.991 |        47.10 |         165.3 |         641.7 |
 | GeForce MX110       |        4.727 |        51.84 |         186.6 |         713.9 |
 
-The quadratic nature of the particle interaction algorithm can clearly be seen from the data - doubling the particle count generally tends to double the time taken to complete the benchmark.
+The quadratic nature of the particle interaction algorithm can clearly be seen from the data - doubling the particle count generally tends to increase the time taken to complete the benchmark by 4x.
 
 ### Data: core clock-speed
 
