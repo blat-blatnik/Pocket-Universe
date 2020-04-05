@@ -38,7 +38,7 @@ uint32_t randu(RNG *rng) {
 int randi(RNG *rng, int min, int max) {
 	uint32_t x = randu(rng);
 	uint64_t m = (uint64_t)x * (uint64_t)(max - min);
-	return (int)(m >> 32);
+	return min + (int)(m >> 32);
 }
 
 float randUniform(RNG *rng, float min, float max) {
