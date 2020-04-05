@@ -27,6 +27,12 @@ vec3 HSV(float h, float s, float v) {
 	}
 }
 
+RNG seedRNG(uint64_t seed) {
+	RNG rng = 2 * seed + 1;
+	randu(&rng);
+	return rng;
+}
+
 uint32_t randu(RNG *rng) {
 	uint64_t x = *rng;
 	uint32_t count = (uint32_t)(x >> 61);
@@ -55,10 +61,4 @@ float randGaussian(RNG *rng, float mean, float stddev) {
 	} while (s >= 1.0 || s == 0.0);
 	s = sqrtf(-2 * logf(s) / s);
 	return mean + stddev * u * s;
-}
-
-RNG seedRNG(uint64_t seed) {
-	RNG rng = 2 * seed + 1;
-	randu(&rng);
-	return rng;
 }
