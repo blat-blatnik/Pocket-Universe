@@ -83,9 +83,9 @@ void updateParticle(inout Particle p) {
 	p.pos += p.vel * deltaTime;
 	p.vel *= ff;
 	if (wrap) {
-		p.pos -= size * ivec2(greaterThanEqual(p.pos, size));
-		p.pos += size * ivec2(lessThan(p.pos, vec2(0)));
-	} 
+		p.pos -= size * vec2(greaterThanEqual(p.pos, size));
+		p.pos += size * vec2(lessThan(p.pos, vec2(0)));
+	}
 	else {
 		float particleDiamater = 2.0 * particleRadius;
 		vec2 minPos = vec2(particleDiamater);
@@ -101,12 +101,17 @@ void updateParticle(inout Particle p) {
 shared TileList tileCache[3][3];
 shared vec2 qPosCache[gl_WorkGroupSize.x];
 shared int qTypeCache[gl_WorkGroupSize.x];
+shared int numParticleTypes;
 
 void main() {
 
 	ivec2 tilePos = ivec2(gl_WorkGroupID.x, gl_WorkGroupID.y);
 	int tileID = tilePos.y * numTiles.x + tilePos.x;
 	tileLists[tileID].capacity = 0;
+
+	if (gl_LocalInvocationID.x == 0)
+		numParticleTypes = particleTypes.length();
+
 	if (gl_LocalInvocationID.x < 9) {
 		// 9 threads will load the data for the neighboring tiles in a 3x3
 		// block and store it into the shared memory cache so that we don't
@@ -120,6 +125,7 @@ void main() {
 		int neighborID = clamp(neighborPos.y * numTiles.x + neighborPos.x, 0, tileLists.length() - 1);
 		tileCache[dy][dx] = tileLists[neighborID];
 	}
+
 	memoryBarrierShared();
 	barrier();
 
@@ -154,7 +160,7 @@ void main() {
 				// Load the neighboring particles into the cache.
 				int qIdx = qBase + int(gl_LocalInvocationID.x);
 				if (qIdx < neighbor.size) {
-					
+				
 					Particle q = particles[neighbor.offset + qIdx];
 					qPosCache[gl_LocalInvocationID.x] = q.pos;
 					qTypeCache[gl_LocalInvocationID.x] = q.type;
@@ -167,7 +173,7 @@ void main() {
 				for (int address = workOffset; address < workOffset + workSize; ++address) {
 
 					Particle p = particles[address];
-					int pOffset = p.type * particleTypes.length();
+					int pOffset = p.type * numParticleTypes;
 					vec2 f = vec2(0);
 
 					for (int qid = 0; qid < qidMax; ++qid) {
