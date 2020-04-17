@@ -332,7 +332,7 @@ void randomize(Universe *u, float attractionMean, float attractionStddev, float 
 
 	for (int i = 0; i < u->numParticles; ++i) {
 		Particle *p = &u->particles[i];
-		p->type = randi(&u->rng, 0, u->numParticleTypes - 1);
+		p->type = randi(&u->rng, 0, u->numParticleTypes);
 		p->pos.x = randUniform(&u->rng, 0, u->width);
 		p->pos.y = randUniform(&u->rng, 0, u->height);
 		p->vel.x = randGaussian(&u->rng, 0, 1);
