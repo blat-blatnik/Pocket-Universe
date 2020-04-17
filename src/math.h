@@ -40,7 +40,7 @@ int randi(RNG *rng, int min, int max);
 // Generate a uniform float in [min, max).
 float randUniform(RNG *rng, float min, float max);
 
-// Generate a gaussian float in [min, max).
+// Generate a normally distributed float with given mean and standard deviation.
 float randGaussian(RNG *rng, float mean, float stddev);
 
 #endif
