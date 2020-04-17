@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <limits.h>
 
-// Construct a 3D vector from 3 floats.
+/* Construct a 3D vector from 3 floats. */
 static vec3 v3(float x, float y, float z) {
 	vec3 v;
 	v.x = x;
@@ -55,10 +55,10 @@ float randUniform(RNG *rng, float min, float max) {
 float randGaussian(RNG *rng, float mean, float stddev) {
 	float u, v, s;
 	do {
-		u = randUniform(rng, -1, 1);
-		v = randUniform(rng, -1, 1);
+		u = randUniform(rng, -1.0f, 1.0f);
+		v = randUniform(rng, -1.0f, 1.0f);
 		s = u * u + v * v;
-	} while (s >= 1.0 || s == 0.0);
-	s = sqrtf(-2 * logf(s) / s);
+	} while (s >= 1.0f || s == 0.0f);
+	s = sqrtf(-2.0f * logf(s) / s);
 	return mean + stddev * u * s;
 }

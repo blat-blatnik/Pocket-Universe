@@ -8,14 +8,14 @@ typedef GLuint Shader;
 typedef GLuint ComputeShader;
 typedef GLuint GpuBuffer;
 
-// Load, compile, and link an OpenGL shader program from the given vertex and fragment shader source files.
+/* Load, compile, and link an OpenGL shader program from the given vertex and fragment shader source files. */
 Shader loadShader(const char *vertSourceFile, const char *fragSourceFile);
 
-// Load, compile, and link an OpenGL compute shader program from the given source code file.
+/* Load, compile, and link an OpenGL compute shader program from the given source code file. */
 ComputeShader loadComputeShader(const char *sourceFile);
 
 #ifndef NDEBUG
-// Check if any OpenGL errors have occured in previous GL calls.
+/* Check if any OpenGL errors have occured in previous GL calls. */
 #define glCheckErrors()\
 	do {\
 		GLenum code = glGetError();\
@@ -36,6 +36,6 @@ ComputeShader loadComputeShader(const char *sourceFile);
 	} while (0)
 #else
 #define glCheckErrors() do {} while(0)
-#endif // NDEBUG
+#endif /* !NDEBUG */
 
 #endif

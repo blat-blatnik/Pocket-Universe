@@ -1,20 +1,20 @@
-// This entire particle simulation idea was inspired by the "Particle Life" youtube video by CodeParade.
-// His channel has some of the most interesting coding videos I've seen.
-// Definitely check him out.
-//
-// Particle Life video: https://youtu.be/Z_zmZ23grXE
-// CodeParade: https://www.youtube.com/channel/UCrv269YwJzuZL3dH5PCgxUw
+/* This entire particle simulation idea was inspired by the "Particle Life" youtube video by CodeParade.
+   His channel has some of the most interesting coding videos I've seen.
+   Definitely check him out.
+
+   Particle Life video: https://youtu.be/Z_zmZ23grXE
+   CodeParade: https://www.youtube.com/channel/UCrv269YwJzuZL3dH5PCgxUw */
 
 #include "universe.h"
 #include "glfw3.h"
 #include <stdlib.h>
 #include <stdio.h>
 
-// Uncomment below to compile a benchmark executable
-//#define BENCHMARK
+/* Uncomment below to compile a benchmark executable */
+/* #define BENCHMARK */
 
-// Request a dedicated GPU if avaliable.
-// See: https://stackoverflow.com/a/39047129
+/* Request a dedicated GPU if avaliable.
+   See: https://stackoverflow.com/a/39047129 */
 #ifdef _MSC_VER
 __declspec(dllexport) unsigned long NvOptimusEnablement = 1;
 __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
@@ -27,7 +27,7 @@ static void onGlfwError(int code, const char *desc) {
 	fprintf(stderr, "GLFW error 0x%X: %s\n", code, desc);
 }
 
-// Callback for when and OpenGL debug error occurs.
+/* Callback for when and OpenGL debug error occurs. */
 static void onGlError(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam) {
 	const char* severityMessage =
 		severity == GL_DEBUG_SEVERITY_HIGH         ? "error" :
@@ -48,13 +48,13 @@ static void onGlError(GLenum source, GLenum type, GLuint id, GLenum severity, GL
 	}
 }
 
-// Report a fatal application error and abort.
+/* Report a fatal application error and abort. */
 static void fatalError(const char* message) {
 	fprintf(stderr, "FATAL ERROR: %s .. aborting\n", message);
 	abort();
 }
 
-// Print the controls.
+/* Print the controls. */
 static void printHelp() {
 	printf(" ================ controls ================\n");
 	printf("|| ESC               close the simulation ||\n");
@@ -78,7 +78,7 @@ static void printHelp() {
 	printf(" ==========================================\n");
 }
 
-// This is called when a key is pressed/released.
+/* This is called when a key is pressed/released. */
 static void onKey(GLFWwindow *window, int key, int scancode, int action, int mods) {
 	if (action != GLFW_PRESS)
 		return;
@@ -144,22 +144,22 @@ static void onKey(GLFWwindow *window, int key, int scancode, int action, int mod
 	}
 }
 
-// This is called when the mouse wheel is scrolled.
+/* This is called when the mouse wheel is scrolled. */
 static void onMouseWheel(GLFWwindow *window, double dx, double dy) {
-	if (dy > 0)
+	if (dy > 0.0)
 		universe.deltaTime *= 1.1f;
-	else if (dy < 0)
+	else if (dy < 0.0)
 		universe.deltaTime /= 1.1f;
 }
 
-// This is called when the window is resized.
-static void onFramebufferResize(GLFWwindow* window, int newWidth, int newHeight) {
+/* This is called when the window is resized. */
+static void onFramebufferResize(GLFWwindow *window, int newWidth, int newHeight) {
 	glViewport(0, 0, newWidth, newHeight);
 }
 
 int main(void) {
 
-	// Print the intro.
+	/* Print the intro. */
 	printf("\nwelcome to the..\n\n");
 	printf(" ========== Pocket Universe ========== \n");
 	printf("||     .     *           .      *    ||\n");
@@ -181,7 +181,7 @@ int main(void) {
 	scanf("%d", &numParticleTypes);
 	printf("\ninitializing ");
 
-	// Initialize GLFW.
+	/* Initialize GLFW. */
 	glfwSetErrorCallback(onGlfwError);
 	int glfwOk = glfwInit();
 	if (!glfwOk) {
@@ -190,22 +190,22 @@ int main(void) {
 
 	printf(".");
 
-	// The window should be hidden for now..
+	/* The window should be hidden for now.. */
 	glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-	// We don't use depth and stencil buffers.
+	/* We don't use depth and stencil buffers. */
 	glfwWindowHint(GLFW_DEPTH_BITS, 0);
 	glfwWindowHint(GLFW_STENCIL_BITS, 0);
-	// We need at least OpenGL 4.3 for shader buffers.
+	/* We need at least OpenGL 4.3 for shader storage buffers. */
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	// We don't want to use deprecated functionality.
+	/* We don't want to use deprecated functionality. */
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 #ifndef NDEBUG
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 #endif
 
-	// Create a window and make its OpenGL context current.
+	/* Create a window and make its OpenGL context current. */
 	GLFWwindow *window = glfwCreateWindow(1280, 720, "Pocket Universe", NULL, NULL);
 	if (window == NULL) {
 		fatalError("failed to open a window");
@@ -214,16 +214,16 @@ int main(void) {
 	printf(".");
 	glfwMakeContextCurrent(window);
 
-	// Load all OpenGL functions.
+	/* Load all OpenGL functions. */
 	int gladOk = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 	if (!gladOk) {
 		fatalError("failed to load OpenGL functions");
 	}
 	printf(".");
 
-	glfwSwapInterval(vsyncIsOn);    // Vsync
-	glEnable(GL_FRAMEBUFFER_SRGB); 	// Gamma correction
-	glEnable(GL_BLEND);             // Transparency
+	glfwSwapInterval(0);            /* Vsync */
+	glEnable(GL_FRAMEBUFFER_SRGB); 	/* Gamma correction */
+	glEnable(GL_BLEND);             /* Transparency */
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glClearColor(0, 0, 0, 1);
 
@@ -240,7 +240,7 @@ int main(void) {
 	double timerFrequency = (double)glfwGetTimerFrequency();
 	uint64_t t0 = glfwGetTimerValue();
 
-	// Set up the initial universe.
+	/* Set up the initial universe. */
 	universe = createUniverse(numParticleTypes, numParticles, 1280, 720);
 	universe.deltaTime = 1.0f;
 	universe.friction = 0.05f;
@@ -265,7 +265,7 @@ int main(void) {
 	printHelp();
 	printf("\n");
 
-	// Start the simulation loop.
+	/* Start the simulation loop. */
 	glfwShowWindow(window);
 	double totalTime = 0;
 	double timeAcc = 0;
@@ -288,7 +288,7 @@ int main(void) {
 	printf("benchmark finished! took %lg seconds to finish %d timesteps (average time per timestep is %lg seconds).", 
 		benchmarkTime, benchmarkTimesteps, benchmarkTime / benchmarkTimesteps);
 #else
-	// Enter the simulation loop.
+	/* Enter the simulation loop. */
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
 		t1 = glfwGetTimerValue();
@@ -301,7 +301,7 @@ int main(void) {
 		draw(&universe);
 		glCheckErrors();
 
-		// Update the statistics in the window title.
+		/* Update the statistics in the window title. */
 		timeAcc  += deltaTime;
 		frameAcc += 1;
 		if (timeAcc >= 0.1) {
@@ -325,9 +325,9 @@ int main(void) {
 	}
 #endif
 
-	// Destroy all used resources and end the program.
+	/* Destroy all used resources and end the program. */
 	destroyUniverse(&universe);
 	glfwDestroyWindow(window);
-	glfwTerminate();
+	glfwTerminate();	
 	return 0;
 }

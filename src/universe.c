@@ -26,14 +26,14 @@ Universe createUniverse(int numParticleTypes, int numParticles, float width, flo
 
 	struct UniverseInternal *ui = &u.internal;
 
-	// Load the shaders.
+	/* Load the shaders. */
 	ui->particleShader  = loadShader("shaders/vert.glsl", "shaders/frag.glsl");
 	ui->setupTiles      = loadComputeShader("shaders/setup_tiles.glsl");
 	ui->sortParticles   = loadComputeShader("shaders/sort_particles.glsl");
 	ui->updateForces    = loadComputeShader("shaders/update_forces.glsl");
 	ui->updatePositions = loadComputeShader("shaders/update_positions.glsl");
 
-	// Generate and bind all of the GPU buffers.
+	/* Generate and bind all of the GPU buffers. */
 	glGenBuffers(1, &ui->gpuUniforms);
 	glGenBuffers(1, &ui->gpuTileLists);
 	glGenBuffers(1, &ui->gpuNewParticles);
@@ -47,12 +47,12 @@ Universe createUniverse(int numParticleTypes, int numParticles, float width, flo
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 4, ui->gpuInteractions);
 	glBindBufferBase(GL_UNIFORM_BUFFER, 10, ui->gpuUniforms);
 
-	// Initialize circle mesh for the particles.
+	/* Initialize circle mesh for the particles. */
 	const float twoPi = 2 * PI;
 	const float limit = twoPi + 0.001f;
 	int num_coords = u.meshDetail + 2;
 	vec2 *coords = (vec2 *)malloc(num_coords * sizeof(vec2));
-	// Generate a circular mesh with the given detail.
+	/* Generate a circular mesh with the given detail. */
 	coords[0].x = 0;
 	coords[0].y = 0;
 	int i = 1;
@@ -66,7 +66,7 @@ Universe createUniverse(int numParticleTypes, int numParticles, float width, flo
 	glBufferData(GL_ARRAY_BUFFER, num_coords * sizeof(vec2), coords, GL_STATIC_DRAW);
 	free(coords);
 
-	// Initialize VAOs.
+	/* Initialize VAOs. */
 	glGenVertexArrays(1, &ui->particleVertexArray1);
 	glGenVertexArrays(1, &ui->particleVertexArray2);
 	glBindVertexArray(ui->particleVertexArray1);
@@ -127,7 +127,7 @@ void updateBuffers(Universe *u) {
 
 	struct UniverseInternal *ui = &u->internal;
 
-	// Recalculate the tile sizes.
+	/* Recalculate the tile sizes. */
 
 	float tileSize = 0;
 	for (int i = 0; i < u->numParticleTypes; ++i)
@@ -145,9 +145,9 @@ void updateBuffers(Universe *u) {
 		int size;
 	} *tileLists = (struct TileList *)calloc(numTiles, sizeof(*tileLists));
 	
-	// On the initial run of the shaders the capacity of the tile lists needs to be calculated.
-	// This is why we have to do it here. After the first timestep we no longer have to do this
-	// here and the shaders will take care of it.
+	/* On the initial run of the shaders the capacity of the tile lists needs to be calculated.
+	   This is why we have to do it here. After the first timestep we no longer have to do this
+	   here and the shaders will take care of it. */
 
 	for (int pID = 0; pID < u->numParticles; ++pID) {
 		Particle p = u->particles[pID];
@@ -206,21 +206,21 @@ void simulateTimestep(Universe *u) {
 	glBindBuffer(GL_UNIFORM_BUFFER, ui->gpuUniforms);
 	glBufferData(GL_UNIFORM_BUFFER, sizeof(uniforms), &uniforms, GL_STREAM_DRAW);
 
-	// The particle data is actually double buffered on the GPU between timesteps.
-	// During the shader pipeline the particles from the back buffer are copied over
-	// to the front buffer sorted in order of which tile they belong to. This improves
-	// the memory caching behavior when we calculate particle interactions. The code
-	// below switches the front/new buffer from the previous timestep to be the back/old
-	// buffer in this timestep. A similar thing has to happen with the VAO so that we
-	// always render the particles in the front buffer.
-	// As a side note, because we re-order the particles every timestep the particles
-	// will appear to flicker when we render them. This is because they will be essentially
-	// drawn in random order each frame and so one frame, particle 1 might completely cover
-	// up particle 2, but the next frame particle 2 might cover up particle 1, which
-	// causes them to flicker. This could be fixed by not using a double-buffer like we
-	// do here and simply storing a list of indices for each tile, but that would
-	// introduce a memory indirection and lower performance by a pretty significant factor
-	// (I tried it).
+	/* The particle data is actually double buffered on the GPU between timesteps.
+	   During the shader pipeline the particles from the back buffer are copied over
+	   to the front buffer sorted in order of which tile they belong to. This improves
+	   the memory caching behavior when we calculate particle interactions. The code
+	   below switches the front/new buffer from the previous timestep to be the back/old
+	   buffer in this timestep. A similar thing has to happen with the VAO so that we
+	   always render the particles in the front buffer.
+	   As a side note, because we re-order the particles every timestep the particles
+	   will appear to flicker when we render them. This is because they will be essentially
+	   drawn in random order each frame and so one frame, particle 1 might completely cover
+	   up particle 2, but the next frame particle 2 might cover up particle 1, which
+	   causes them to flicker. This could be fixed by not using a double-buffer like we
+	   do here and simply storing a list of indices for each tile, but that would
+	   introduce a memory indirection and lower performance by a pretty significant factor
+	   (I tried it). */
 
 	GpuBuffer temp = ui->gpuNewParticles;
 	ui->gpuNewParticles = ui->gpuOldParticles;
@@ -252,45 +252,47 @@ void simulateTimestep(Universe *u) {
 void draw(Universe *u) {
 	struct UniverseInternal *ui = &u->internal;
 
-	// The code commented out below needs to be uncommented if
-	// you are drawing the universe without simulating a timestep first.
-	// So if you are doing something like:
-	//
-	//  while (..) {
-	//    simulateTimestep(&u);
-	//    ..
-	//    draw(&u);
-	//  }
-	//
-	// Then this should stay commented out.
-	//
-	//struct {
-	//	int numTilesX;
-	//	int numTilesY;
-	//	float invTileSize;
-	//	float deltaTime;
-	//	float width;
-	//	float height;
-	//	float centerX;
-	//	float centerY;
-	//	float friction;
-	//	float particleRadius;
-	//	int wrap;
-	//} uniforms;
-	//
-	//uniforms.numTilesX = ui->numTilesX;
-	//uniforms.numTilesY = ui->numTilesY;
-	//uniforms.invTileSize = ui->invTileSize;
-	//uniforms.deltaTime = u->deltaTime;
-	//uniforms.width = u->width;
-	//uniforms.height = u->height;
-	//uniforms.centerX = u->width / 2;
-	//uniforms.centerY = u->height / 2;
-	//uniforms.friction = u->friction;
-	//uniforms.particleRadius = u->particleRadius;
-	//uniforms.wrap = u->wrap;
-	//glBindBuffer(GL_UNIFORM_BUFFER, ui->gpuUniforms);
-	//glBufferData(GL_UNIFORM_BUFFER, sizeof(uniforms), &uniforms, GL_STREAM_DRAW);
+	/* The code commented out below needs to be uncommented if
+	   you are drawing the universe without simulating a timestep first.
+	   So if you are doing something like:
+	   
+	    while (..) {
+	      simulateTimestep(&u);
+	      ..
+	      draw(&u);
+	    }
+	   
+	   Then this should stay commented out. */
+
+	/*
+	struct {
+		int numTilesX;
+		int numTilesY;
+		float invTileSize;
+		float deltaTime;
+		float width;
+		float height;
+		float centerX;
+		float centerY;
+		float friction;
+		float particleRadius;
+		int wrap;
+	} uniforms;
+	
+	uniforms.numTilesX = ui->numTilesX;
+	uniforms.numTilesY = ui->numTilesY;
+	uniforms.invTileSize = ui->invTileSize;
+	uniforms.deltaTime = u->deltaTime;
+	uniforms.width = u->width;
+	uniforms.height = u->height;
+	uniforms.centerX = u->width / 2;
+	uniforms.centerY = u->height / 2;
+	uniforms.friction = u->friction;
+	uniforms.particleRadius = u->particleRadius;
+	uniforms.wrap = u->wrap;
+	glBindBuffer(GL_UNIFORM_BUFFER, ui->gpuUniforms);
+	glBufferData(GL_UNIFORM_BUFFER, sizeof(uniforms), &uniforms, GL_STREAM_DRAW);
+	*/
 
 	glUseProgram(ui->particleShader);
 	glBindVertexArray(ui->particleVertexArray2);
@@ -320,7 +322,7 @@ void randomize(Universe *u, float attractionMean, float attractionStddev, float 
 			
 			interaction->maxRadius = fmaxf(randUniform(&u->rng, maxRadius0, maxRadius1), interaction->minRadius);
 
-			// Keep radii symmetric
+			/* Keep radii symmetric. */
 			getInteraction(u, j, i)->maxRadius = getInteraction(u, i, j)->maxRadius;
 			getInteraction(u, j, i)->minRadius = getInteraction(u, i, j)->minRadius;
 
@@ -330,7 +332,7 @@ void randomize(Universe *u, float attractionMean, float attractionStddev, float 
 
 	for (int i = 0; i < u->numParticles; ++i) {
 		Particle *p = &u->particles[i];
-		p->type = randi(&u->rng, 0, u->numParticleTypes);
+		p->type = randi(&u->rng, 0, u->numParticleTypes - 1);
 		p->pos.x = randUniform(&u->rng, 0, u->width);
 		p->pos.y = randUniform(&u->rng, 0, u->height);
 		p->vel.x = randGaussian(&u->rng, 0, 1);
