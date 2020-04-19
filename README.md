@@ -10,7 +10,7 @@ This project was inspired by [CodeParade](https://www.youtube.com/channel/UCrv26
 
 Each particle only attracts or repells other particles which are withing some _maximum radius_. If two particles come really really close together they will always start strongly repelling in order to avoid occupying the same space. There is also _friction_ in the system, meaning the particles lose a proportion of their velocity each second - because of this the particles tend to fall into mutually stable arrangements with other particles.
 
-If you want more details you should check out [the video](https://youtu.be/Z_zmZ23grXE) by [CodeParade](https://www.youtube.com/channel/UCrv269YwJzuZL3dH5PCgxUw) which goes into more detail. My goal with this project was to optimize this simulation so that it could run a very large number of particles. I did so by implementing Particle Life in compute shaders running massively in parallel on the GPU, rendered in real-time.
+If you want more details you should check out [the video](https://youtu.be/Z_zmZ23grXE) by [CodeParade](https://www.youtube.com/channel/UCrv269YwJzuZL3dH5PCgxUw). My goal with this project was to optimize this simulation so that it could run a very large number of particles. I did so by implementing Particle Life in compute shaders running massively in parallel on the GPU, rendered in real-time.
 
 ![](/screenshots/4.png)
 
