@@ -19,11 +19,11 @@ If you want more details you should check out [the video](https://youtu.be/Z_zmZ
 Since each particle can interact with every other particle the simulation algorithm is inherently an O(n<sup>2</sup>) algorithm, where _n_ denotes the number of particle in the simulation. In fact this simulation is very similar to [N-body simulations](https://en.wikipedia.org/wiki/N-body_simulation), except in 2D. A naive implementation of the Particle Life simulation would be something like this:
 
 ```python
-for particle p in particles:
-  for particle q in particles:
+for p in particles:
+  for q in particles:
     p.velocity += interact(p, q)
 
-for particle p in particles:
+for p in particles:
   p.position += p.velocity
 ```
 
@@ -37,17 +37,17 @@ we can use the fact that particles only interact with particles within a strictl
 for tile in tiles:
   clear(tile)
 
-for particle p in particles:
+for p in particles:
   tile = tiles[floor(p.position / tiles.count)]
   add(p, tile.particles)
   
-for particle p in particles:
+for p in particles:
   tile = gettile(p)
-  for tile n in neighbors(tile)
-    for particle q in n.particles
+  for n in neighbors(tile)
+    for q in n.particles
       p.velocity += interact(p, q)
 
-for particle p in particles:
+for p in particles:
   p.position += p.velocity
 ```
 
@@ -84,7 +84,7 @@ for p in particles:
   
 for tile in tiles:
   for p in tile.particles:
-      for tile n in neighbors(tile)
+      for n in neighbors(tile)
         for particle q in n.particles
           p.velocity += interact(p, q)
           
@@ -112,8 +112,8 @@ for p in particles:
 
 for tile in tiles:
   for p in tile.particles:
-      for tile n in neighbors(tile)
-        for particle q in n.particles
+      for n in neighbors(tile)
+        for q in n.particles
           p.velocity += interact(p, q)
           
 for p in particles:
