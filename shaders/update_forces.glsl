@@ -78,26 +78,6 @@ vec2 calcForce(vec2 ppos, vec2 qpos, ParticleInteraction interaction) {
 	}
 }
 
-void updateParticle(inout Particle p) {	
-	float ff = pow(1.0 - friction, deltaTime);
-	p.pos += p.vel * deltaTime;
-	p.vel *= ff;
-	if (wrap) {
-		p.pos -= size * vec2(greaterThanEqual(p.pos, size));
-		p.pos += size * vec2(lessThan(p.pos, vec2(0)));
-	}
-	else {
-		float particleDiamater = 2.0 * particleRadius;
-		vec2 minPos = vec2(particleDiamater);
-		vec2 maxPos = size - vec2(particleDiamater);
-		bvec2 less = lessThanEqual(p.pos, minPos);
-		bvec2 greater = greaterThanEqual(p.pos, maxPos);
-		bvec2 mask = bvec2(ivec2(less) | ivec2(greater));
-		p.vel *= mix(vec2(1.0), vec2(-1.0), mask);
-		p.pos = clamp(p.pos, minPos, maxPos);
-	}
-}
-
 shared TileList tileCache[3][3];
 shared vec2 qPosCache[gl_WorkGroupSize.x];
 shared int qTypeCache[gl_WorkGroupSize.x];
