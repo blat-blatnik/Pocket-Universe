@@ -1,4 +1,4 @@
-![](./screenshots/particles.gif)
+![](./screenshots/particles2.gif)
 
 # Pocket-Universe
 
