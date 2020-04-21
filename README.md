@@ -2,7 +2,7 @@
 
 # Pocket-Universe
 
-A particle simulation running in parallel on the GPU using compute shaders. In this particle system the particles can attract and repel each other in a small radius and it looks astounding and very life-like when running in real time. I optimized it as much as I could. The current system can simulate around 100'000-200'000 particles in real-time (30fps) on a modern GPU. 
+A particle simulation running in parallel on the GPU using compute shaders. In this system the particles can attract and repel each other in a small radius and it looks astounding and very life-like when running in real time. I optimized it as much as I could. The current system can simulate around 100'000-200'000 particles in real-time (30fps) on a modern GPU. 
 
 ![](/screenshots/1.png)
 
@@ -10,7 +10,7 @@ A particle simulation running in parallel on the GPU using compute shaders. In t
 
 This project was inspired by [CodeParade](https://www.youtube.com/channel/UCrv269YwJzuZL3dH5PCgxUw)'s [Particle Life](https://youtu.be/Z_zmZ23grXE) simulation. In this simulation the world consists of a number of differently colored particles. These particles can can be attracted - or repelled - by particles of different colors. For example, _blue_ particles might be attracted to _red_ particles, while _red_ particles might be repelled by _green_ particles, etc. A major difference between Particle Life and the [Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life) is that in Particle Life, the particles can occupy any position in space, not just integer grid positions.
 
-Each particle only attracts or repells other particles which are withing some _maximum radius_. If two particles come really really close together they will always start strongly repelling in order to avoid occupying the same space. There is also _friction_ in the system, meaning the particles lose a proportion of their velocity each second - because of this the particles tend to fall into mutually stable arrangements with other particles.
+Each particle only attracts or repells other particles that are within some _maximum radius_. If two particles come really really close together they will always start strongly repelling in order to avoid occupying the same space. There is also _friction_ in the system, meaning the particles lose a proportion of their velocity each second - because of this the particles tend to fall into mutually stable arrangements with other particles.
 
 If you want more details you should check out [the video](https://youtu.be/Z_zmZ23grXE) by [CodeParade](https://www.youtube.com/channel/UCrv269YwJzuZL3dH5PCgxUw). My goal with this project was to optimize this simulation so that it could run a very large number of particles. I did so by implementing Particle Life in compute shaders running massively in parallel on the GPU, rendered in real-time.
 
@@ -44,7 +44,7 @@ for p in particles:
   add(p, tile.particles)
   
 for p in particles:
-  tile = gettile(p)
+  tile = tiles[floor(p.position / tiles.count)]
   for n in neighbors(tile)
     for q in n.particles
       p.velocity += interact(p, q)
@@ -53,7 +53,7 @@ for p in particles:
   p.position += p.velocity
 ```
 
-This reduces the algorithmic complexity of the simulation from O(n<sup>2</sup>) to O(nt), where _t_ denotes the largest number of particles that belongs to any tile. Since _t_ will usually be way smaller than _n_, this is a big performance win. An implementation on the CPU can now simulate 8'000 particles (single-threaded), and a GPU implementation can simulate around 40'000 particles.
+This reduces the algorithmic complexity of the simulation from O(n<sup>2</sup>) to O(nt), where _t_ denotes the largest number of particles that belongs to any tile. Since the particles tend to stay somewhat spread out _t_ will usually be way smaller than _n_, this is a big performance win. An implementation on the CPU can now simulate 8'000 particles (single-threaded), and a GPU implementation can simulate around 40'000 particles.
 
 ![](/screenshots/2.png)
 
@@ -63,7 +63,7 @@ While the psudocode above nicely _outlines_ the tiling algorithm, it hides one m
 
 ### Radix sort
 
-We can use a parallel variation of [radix sort](https://en.wikipedia.org/wiki/Radix_sort) in order to sort the tiles based on their tile position, we can back the tile lists by a single array, whose length is the number of particles - this way our memory complexity stays O(n), instead of exploding to O(nt). Another benefit of this approach is that it exploits the GPU's _cache_ much better, as particles in the same tile remain close in memory. This will turn out to be a big win.
+We can use a parallel variation of [radix sort](https://en.wikipedia.org/wiki/Radix_sort) in order to sort the tiles based on their tile position, we can have all the tile lists be backed by a single array that is exactly big enough to hold all of the particles. This way our memory complexity stays O(n), instead of exploding to O(nt) which would happen if all tiles had a big enough array to hold all particles. Another benefit of this approach is that it exploits the GPU's _cache_ much better, as particles in the same tile remain close in memory. This will turn out to be a big win.
 
 The radix sort is performed in three steps. First, we determine how many particles will go into each tile. Then, allocate a portion of the array to each tile so that we know where the lists for each tile stop and end. And then finally, we add each particle to its associated tile list. In pseudocode this would look something like the following:
 
@@ -94,7 +94,7 @@ for p in particles:
   p.position += p.velocity
 ```
 
-The GPU implementation following the above algorithm can simulate roughly 80'000 particles in real-time. We improved a caching by implementing the additional steps above, however we have also reached a point where scheduling the compute shaders becomes a large bottleneck.
+The GPU implementation following the above algorithm can simulate roughly 80'000 particles in real-time. We improved our memory access patterns by implementing the additional steps above, however we have also reached a point where scheduling the compute shaders becomes a large bottleneck.
 
 ### Unification
 
@@ -124,19 +124,19 @@ for p in particles:
   tile.capacity += 1
 ```
 
-These 4 steps are equivalent to the above 6, however they require the tile capacities to already be computed before running the first timestep, so this work has to be done on the CPU. Each of the 4 steps is performed by 1 of the 4 compute shaders. This is the final step in the optimization. Using this algorithm we can finally simulate 100'000 particles in real-time.
+These 4 steps are equivalent to the above 6, however they require the tile capacities to already be computed before running the first timestep, so this work has to be done on the CPU before the first timestep is simulated on the GPU. Each of the 4 steps is performed by 1 of the 4 compute shaders. This is the final step in the optimization. Using this algorithm we can finally simulate 100'000 particles in real-time.
 
 ![](/screenshots/8.png)
 
 ### Leftover details
 
-The above sections only mention large optimizations that gave a significant performance improvement however many smaller but interesting optimizations are not covered. For example, instead of having each thread of a compute shader workgroup fetch the same value from memory, this value is only fetched by 1 thread, and cached for use by the others. This greatly reduces memory contention and resulted in a 20% performance boost when applied over all of the shaders.
+The above sections only mention large optimizations that gave a significant performance improvement however many smaller but interesting optimizations are not covered. For example, instead of having each thread of a compute shader workgroup fetch the same value from memory, this value can be fetched by only 1 thread, and then cached for use by the others. This greatly reduces memory contention and resulted in a 20% performance boost when applied over all of the shaders.
 
 Some implementation details are also left out of the above, such as how the `tiledparticles` list doesn't just hold a reference to particles from the `particles` array, but rather the particle array is [double-buffered](https://en.wikipedia.org/wiki/Multiple_buffering). You can find more details in the source code.
 
 ## Benchmarks
 
-3 benchmarks of the final simulation code was run on 4 different computers and 7 different graphics cards. In the benchmarks I measured the time taken to simulate and draw 1,000 timesteps of a simulation with 10'000, 50'000, 100'000, and 200'000 particles. The RNG seed `42` was used to generate every universe from the benchmark for consistency. Vsync was turned off, and window event processing was ignored during the benchmark runs. Laptop machines were plugged in and charged through the simulation, and all other programs were closed.
+3 benchmarks of the final simulation code were run on 4 different computers and 7 different graphics cards. In the benchmarks I measured the time taken to simulate and draw 1,000 timesteps of a simulation with 10'000, 50'000, 100'000, and 200'000 particles. The RNG seed `42` was used to generate every universe from the benchmark for consistency. Vsync was turned off, and window event processing was ignored during the benchmark runs. Laptop machines were plugged in and charged through the simulation, and all other programs were closed.
 
 ### GPU specs
 
@@ -145,12 +145,12 @@ The following GPUs were used in the benchmarks. The clock speeds reported here w
 | model                      | machine-type | cores | GPU-clock [MHz] | memory-clock [MHz] |
 | -------------------------- | :----------: | ----: | --------------: | -----------------: |
 | NVIDIA GeForce GTX 1080 Ti | desktop      | 3584  | 2075            | 5643               |
-| NVIDIA GeForce GTX 1050    | laptop       | 640   | 1721            | 3504               |
-| NVIDIA GeForce 940MX       | laptop       | 384   | 1176            | 2000               |
-| Intel HD Graphics 620      | laptop       | 24    | 1050            | 2400               |
-| Intel UHD Graphics 620     | laptop       | 24    | 1050            | 2400               |
-| Intel HD Graphics 630      | laptop       | 24    | 1000            | 2400               |
-| NVIDIA GeForce MX110       | laptop       | 256   | 1005            | 2505               |
+| NVIDIA GeForce GTX 1050    | laptop       |  640  | 1721            | 3504               |
+| NVIDIA GeForce 940MX       | laptop       |  384  | 1176            | 2000               |
+| Intel HD Graphics 620      | laptop       |   24  | 1050            | 2400               |
+| Intel UHD Graphics 620     | laptop       |   24  | 1050            | 2400               |
+| Intel HD Graphics 630      | laptop       |   24  | 1000            | 2400               |
+| NVIDIA GeForce MX110       | laptop       |  256  | 1005            | 2505               |
 
 ### Data: particle count
 
@@ -226,7 +226,7 @@ Place the [`/shaders`](/shaders) directory **in the same directory as the execut
 
 ![](/screenshots/9.png)
 
-If for you couldn't or didn't compile for any reason, pre-compiled executables are provided in the [`/bin`](/bin) directory. One is for [windows](/bin/Pocket%20Universe.exe), and the other is for [linux](/bin/Pocket%20Universe.out). Make sure you also place the [`/shaders`](/shaders) directory in the same directory as the executable when running.
+If you couldn't or didn't compile from source for whatever reason, pre-compiled executables are provided in the [`/bin`](/bin) directory. One is for [windows](/bin/Pocket%20Universe.exe), and the other is for [linux](/bin/Pocket%20Universe.out). Make sure you also place the [`/shaders`](/shaders) directory in the same directory as the executable when running.
 
 ### Controls
 
