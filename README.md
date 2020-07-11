@@ -230,20 +230,20 @@ If you couldn't or didn't compile from source for whatever reason, pre-compiled 
 
 ### Controls
 
-| key   | function                     |
-| :---: | ---------------------------- |
-| `ESC` | close the simulation         |
-| `H`   | print out the controls       |
-| `W`   | toggle universe wrap-around  |
-| `V`   | toggle vsync                 |
-| `TAB` | print simulation parameters  |
-| `B`   | randomize balanced           |
-| `C`   | randomize chaos              |
-| `D`   | randomize diversity          |
-| `F`   | randomize frictionless       |
-| `G`   | randomize gliders            |
-| `O`   | randomize homogeneity        |
-| `L`   | randomize large clusters     |
-| `M`   | randomize medium clusters    |
-| `S`   | randomize small clusters     |
-| `Q`   | randomize quiescence         |
+| key            | function                     |
+| :------------: | ---------------------------- |
+| <kbd>ESC</kbd> | close the simulation         |
+| <kbd>H</kbd>   | print out the controls       |
+| <kbd>W</kbd>   | toggle universe wrap-around  |
+| <kbd>V</kbd>   | toggle vsync                 |
+| <kbd>TAB</kbd> | print simulation parameters  |
+| <kbd>B</kbd>   | randomize balanced           |
+| <kbd>C</kbd>   | randomize chaos              |
+| <kbd>D</kbd>   | randomize diversity          |
+| <kbd>F</kbd>   | randomize frictionless       |
+| <kbd>G</kbd>   | randomize gliders            |
+| <kbd>O</kbd>   | randomize homogeneity        |
+| <kbd>L</kbd>   | randomize large clusters     |
+| <kbd>M</kbd>   | randomize medium clusters    |
+| <kbd>S</kbd>   | randomize small clusters     |
+| <kbd>Q</kbd>   | randomize quiescence         |
